@@ -50,30 +50,56 @@ void Tracker::readAndTrack(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::R
     int frame_height = frame.rows;
 
     // Define the codec and create VideoWriter object.The output is stored in 'outcpp.avi' file.
-    cv::VideoWriter video("outcpp.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 25, cv::Size(frame_width, frame_height));
+    //cv::VideoWriter video("outcpp1.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 25, cv::Size(frame_width, frame_height));
 
     while (cv::waitKey(1) < 0) {
 
-        turn++;
-        sq.timeout_pop(frame,10);
-
+        //turn++;
+        sq.timeout_pop(frame,100);
+        cv::putText(frame, " TRACKER ", cvPoint(30, 60),cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200, 200, 250), 1, cv::LINE_AA);
         // Burada 30 frame biriktiriyoruz ki detector ile aramizda frame farkini azaltalim.
         /*frame_deque.push_back(frame);
-        if (frame_deque.size() < 2)
+        if (frame_deque.size() < 1)
             continue;
-        
+
         frame = frame_deque.front();
         frame_deque.pop_front();*/
 
         // Too slow
         // Yeni koordinatlar
-        if (sq2.try_pop(rectangle_list)) {
+        // timeout_pop
+
+        // || turn%30 == 0
+
+        
+        if (turn % 120 == 1) {
+            turn = 1;
+            sq2.pop(rectangle_list);
+            //cv::putText(frame, " DETECTION ", cvPoint(30, 30),cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200, 200, 250), 1, cv::LINE_AA);
+
             trackers = cv::MultiTracker::create();
             for (cv::Rect r : rectangle_list) {
-                //trackers->add(cv::TrackerCSRT::create(), frame, r);
+                trackers->add(cv::TrackerCSRT::create(), frame, r);
                 //trackers->add(cv::TrackerKCF::create(), frame, r);
-                trackers->add(cv::TrackerMOSSE::create(), frame, r);
+                //trackers->add(cv::TrackerMOSSE::create(), frame, r);
+
             }
+        }
+        else {
+            if (sq2.try_pop(rectangle_list)) {
+            
+                trackers = cv::MultiTracker::create();
+                for (cv::Rect r : rectangle_list) {
+                    trackers->add(cv::TrackerCSRT::create(), frame, r);
+                    //trackers->add(cv::TrackerKCF::create(), frame, r);
+                    //trackers->add(cv::TrackerMOSSE::create(), frame, r);
+
+                }
+            
+            }
+        
+        
+        
         }
 
         trackers->update(frame);
@@ -82,14 +108,12 @@ void Tracker::readAndTrack(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::R
             cv::rectangle(frame, trackers->getObjects()[i], cv::Scalar(0, 255, 0), 2, 1);
         }
 
-
-
         //video.write(frame);
 
         cv::imshow("Window", frame);
-        if (cv::waitKey(1) >= 0) break;
+        cv::waitKey(1);
     }
-    video.release();
+    //video.release();
     cv::destroyAllWindows();
 
 

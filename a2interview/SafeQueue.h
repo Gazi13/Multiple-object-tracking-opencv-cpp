@@ -70,6 +70,12 @@ public:
      * \param[in] item An item.
      * \return true if an item was pushed into the queue
      */
+    bool limit_check() {
+        if (m_queue.size() < m_max_num_items)
+            return true;
+        else
+            return false;
+    }
     bool push(const value_type& item)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -77,6 +83,18 @@ public:
         if (m_max_num_items > 0 && m_queue.size() > m_max_num_items)
             return false;
 
+        m_queue.push(item);
+        m_condition.notify_one();
+        return true;
+    }
+
+    bool push_wait(const value_type& item)
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_condition.wait(lock, [this]() // Lambda funct
+            {
+                return limit_check();
+            });
         m_queue.push(item);
         m_condition.notify_one();
         return true;
@@ -306,7 +324,7 @@ private:
     std::queue<T, Container> m_queue;
     mutable std::mutex m_mutex;
     std::condition_variable m_condition;
-    unsigned int m_max_num_items = 0;
+    unsigned int m_max_num_items = 1000;
 };
 
 /*! Swaps the contents of two SafeQueue objects. */
