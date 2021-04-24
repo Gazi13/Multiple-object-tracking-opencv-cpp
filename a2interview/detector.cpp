@@ -46,10 +46,10 @@ void detector::readAndDetect(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv:
 
 
         turn++;
-        sq.timeout_pop(frame,100); // timeout_front
+        sq.timeout_front(frame,10); // timeout_front
         detector::detectObjects(yoloNeuralNetwork, frame, sq2);
-        cv::imshow("detect", frame);
-        //std::this_thread::sleep_for(std::chrono::seconds(1));
+        //cv::imshow("detect", frame);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
     }
 
@@ -78,7 +78,7 @@ void detector::detectObjects(YoloNeuralNetwork& yoloNeuralNetwork, cv::Mat& fram
             height = (*it).roi.height;
             //cv::rectangle(visImg, cv::Point(left, top), cv::Point(left + width, top + height), cv::Scalar(0, 255, 0), 2);
 
-            if(width<(frame.cols/2) && height< (frame.rows/2)){
+            if(width<(frame.cols/2) && height< (frame.rows/2) && width>10 && height>10){
                 cv::Rect r(left, top, width, height);
                 boxes.push_back(r);
                 filtered_boxes.push_back((*it));
@@ -86,6 +86,6 @@ void detector::detectObjects(YoloNeuralNetwork& yoloNeuralNetwork, cv::Mat& fram
         }
     }
     sq2.push(boxes);
-    frame = yoloNeuralNetwork.drawBoundingBoxes(frame, filtered_boxes);
+    //frame = yoloNeuralNetwork.drawBoundingBoxes(frame, filtered_boxes);
 
 }

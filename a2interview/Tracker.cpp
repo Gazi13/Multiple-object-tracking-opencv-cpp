@@ -41,21 +41,38 @@ void Tracker::readAndTrack(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::R
     cv::Mat frame;
     cv::Rect rectangle;
     std::vector<cv::Rect> rectangle_list;
-
+    std::deque<cv::Mat> frame_deque;
     cv::Ptr<cv::MultiTracker> trackers = cv::MultiTracker::create();
+
+    sq.timeout_front(frame, 10);
+    // Default resolutions of the frame are obtained.The default resolutions are system dependent.
+    int frame_width = frame.cols;
+    int frame_height = frame.rows;
+
+    // Define the codec and create VideoWriter object.The output is stored in 'outcpp.avi' file.
+    cv::VideoWriter video("outcpp.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 25, cv::Size(frame_width, frame_height));
 
     while (cv::waitKey(1) < 0) {
 
         turn++;
         sq.timeout_pop(frame,10);
 
+        // Burada 30 frame biriktiriyoruz ki detector ile aramizda frame farkini azaltalim.
+        /*frame_deque.push_back(frame);
+        if (frame_deque.size() < 2)
+            continue;
+        
+        frame = frame_deque.front();
+        frame_deque.pop_front();*/
+
         // Too slow
         // Yeni koordinatlar
         if (sq2.try_pop(rectangle_list)) {
-            std::cout << "NEW TRACKER"<< std::endl;
             trackers = cv::MultiTracker::create();
             for (cv::Rect r : rectangle_list) {
                 trackers->add(cv::TrackerCSRT::create(), frame, r);
+                if (trackers->getObjects().size() > 3)
+                    break;
             }
         }
 
@@ -65,9 +82,16 @@ void Tracker::readAndTrack(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::R
             cv::rectangle(frame, trackers->getObjects()[i], cv::Scalar(255, 0, 0), 2, 1);
         }
 
+
+
+        video.write(frame);
+
         cv::imshow("Window", frame);
         if (cv::waitKey(1) >= 0) break;
     }
+    video.release();
+    cv::destroyAllWindows();
+
 
 }
 
