@@ -65,7 +65,7 @@ public:
     void setData(int data) {
         this->data = data;
     }
-
+    void readAndDetect2(SafeQueue<cv::Mat>& sq, SafeQueue <std::vector<cv::Rect>>& sq2);
     void readAndDetect(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::Rect>>& sq2);
     void detectObjects(YoloNeuralNetwork& yoloNeuralNetwork, cv::Mat& frame, SafeQueue <std::vector<cv::Rect>>& sq2);
 

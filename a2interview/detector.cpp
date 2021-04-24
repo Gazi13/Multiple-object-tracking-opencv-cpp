@@ -35,24 +35,40 @@
 
 detector* detector::instance = 0;
 
-void detector::readAndDetect(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::Rect>>& sq2) {
 
-    int turn = 10;
-    cv::Mat frame;
+void detector::readAndDetect(SafeQueue<cv::Mat>& sq, SafeQueue <std::vector<cv::Rect>>& sq2) {
+
+    std::cout << "Video Player " << std::endl;
+    std::string vFileName = "C:/Users/ahmet/Desktop/Video-a2.mp4";
+    std::string wName = "Video Player";
+
     cv::Rect rectangle;
-    cv::Mat& frame_ref = frame;
+    cv::VideoCapture cap;
+
     YoloNeuralNetwork yoloNeuralNetwork = initModel();
-    while (cv::waitKey(1) < 0) {
 
-
-        turn++;
-        sq.timeout_front(frame,10); // timeout_front
-        detector::detectObjects(yoloNeuralNetwork, frame, sq2);
-        //cv::imshow("detect", frame);
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    cap.open(vFileName);
+    if (cap.isOpened())
+    {
+        double fps = cap.get(cv::CAP_PROP_FPS);
+        cv::Mat frame;
+        for (;;)
+        {
+            if (!cap.read(frame))
+                break;
+            // alternatif cap >> frame2;
+            sq.push(frame.clone());
+            detector::detectObjects(yoloNeuralNetwork, frame, sq2);
+            //cv::imshow("detect", frame);
+            //cv::waitKey(1);
+        }
+        cap.release();
 
     }
-
+    else
+    {
+        std::cout << "Video File " << vFileName << " Not Opened ..." << std::endl;
+    }
 
 }
 
@@ -78,7 +94,7 @@ void detector::detectObjects(YoloNeuralNetwork& yoloNeuralNetwork, cv::Mat& fram
             height = (*it).roi.height;
             //cv::rectangle(visImg, cv::Point(left, top), cv::Point(left + width, top + height), cv::Scalar(0, 255, 0), 2);
 
-            if(width<(frame.cols/2) && height< (frame.rows/2) && width>10 && height>10){
+            if(width<(frame.cols/2) && height< (frame.rows/2) && width>20 && height>20){
                 cv::Rect r(left, top, width, height);
                 boxes.push_back(r);
                 filtered_boxes.push_back((*it));
@@ -86,6 +102,26 @@ void detector::detectObjects(YoloNeuralNetwork& yoloNeuralNetwork, cv::Mat& fram
         }
     }
     sq2.push(boxes);
-    //frame = yoloNeuralNetwork.drawBoundingBoxes(frame, filtered_boxes);
+    frame = yoloNeuralNetwork.drawBoundingBoxes(frame, filtered_boxes);
+
+}
+void detector::readAndDetect2(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::Rect>>& sq2) {
+
+    int turn = 10;
+    cv::Mat frame;
+    cv::Rect rectangle;
+    cv::Mat& frame_ref = frame;
+    YoloNeuralNetwork yoloNeuralNetwork = initModel();
+    while (cv::waitKey(1) < 0) {
+
+
+        turn++;
+        sq.timeout_front(frame, 10); // timeout_front
+        detector::detectObjects(yoloNeuralNetwork, frame, sq2);
+        //cv::imshow("detect", frame);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+    }
+
 
 }

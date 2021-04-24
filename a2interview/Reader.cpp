@@ -13,28 +13,21 @@ void Reader::readAndSend(SafeQueue<cv::Mat>& sq) {
     if (vCap.isOpened())
     {
         double fps = vCap.get(cv::CAP_PROP_FPS);
-
         cv::Mat frame;
-        cv::Mat frame2;
-        //cv::namedWindow(wName);
         for (;;)
         {
-            if (!vCap.read(frame2))
+            if (!vCap.read(frame))
                 break;
             // alternatif vCap >> frame2;
-            sq.push(frame2.clone());
-            //cv::imshow(wName, frame2);
-            //if (cv::waitKey(1000 / fps) >= 0)
-            //   break;
+            sq.push(frame.clone());
+
         }
         vCap.release();
-        //cv::destroyWindow(wName);
 
     }
     else
     {
         std::cout << "Video File " << vFileName << " Not Opened ..." << std::endl;
     }
-
 
 }

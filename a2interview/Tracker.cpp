@@ -70,21 +70,21 @@ void Tracker::readAndTrack(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::R
         if (sq2.try_pop(rectangle_list)) {
             trackers = cv::MultiTracker::create();
             for (cv::Rect r : rectangle_list) {
-                trackers->add(cv::TrackerCSRT::create(), frame, r);
-                if (trackers->getObjects().size() > 3)
-                    break;
+                //trackers->add(cv::TrackerCSRT::create(), frame, r);
+                //trackers->add(cv::TrackerKCF::create(), frame, r);
+                trackers->add(cv::TrackerMOSSE::create(), frame, r);
             }
         }
 
         trackers->update(frame);
 
         for (unsigned i = 0; i < trackers->getObjects().size(); i++) {
-            cv::rectangle(frame, trackers->getObjects()[i], cv::Scalar(255, 0, 0), 2, 1);
+            cv::rectangle(frame, trackers->getObjects()[i], cv::Scalar(0, 255, 0), 2, 1);
         }
 
 
 
-        video.write(frame);
+        //video.write(frame);
 
         cv::imshow("Window", frame);
         if (cv::waitKey(1) >= 0) break;
