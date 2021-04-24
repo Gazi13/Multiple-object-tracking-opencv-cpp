@@ -54,7 +54,7 @@ void detect(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::Rect>>& sq2)
 
 void track(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::Rect>>& sq2)
 {
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     Tracker* p = p->getInstance();
     p->readAndTrack(sq,sq2);
 
@@ -69,14 +69,14 @@ int main()
 
     std::thread th1(read, ref(sq));     // spawn new thread that calls foo()
     std::thread th2(detect, ref(sq), ref(sq2));  // spawn new thread that calls bar(0)
-    std::thread th3(track, ref(sq), ref(sq2));
+    //std::thread th3(track, ref(sq), ref(sq2));
 
     std::cout << "main, foo and bar now execute concurrently...\n";
     
     
     th1.join();
     th2.join();
-    th3.join();
+    //th3.join();
 
     std::cout << "foo and bar completed.\n";
 

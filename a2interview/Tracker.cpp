@@ -47,7 +47,7 @@ void Tracker::readAndTrack(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::R
     while (cv::waitKey(1) < 0) {
 
         turn++;
-        sq.timeout_pop(frame, 1000);
+        sq.timeout_pop(frame,10);
 
         // Too slow
         // Yeni koordinatlar
@@ -61,12 +61,12 @@ void Tracker::readAndTrack(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv::R
 
         trackers->update(frame);
 
-        /*for (unsigned i = 0; i < trackers->getObjects().size(); i++) {
+        for (unsigned i = 0; i < trackers->getObjects().size(); i++) {
             cv::rectangle(frame, trackers->getObjects()[i], cv::Scalar(255, 0, 0), 2, 1);
-        }*/
+        }
 
         cv::imshow("Window", frame);
-        //if (cv::waitKey(1) >= 0) break;
+        if (cv::waitKey(1) >= 0) break;
     }
 
 }

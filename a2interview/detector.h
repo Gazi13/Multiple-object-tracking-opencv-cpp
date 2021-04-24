@@ -43,6 +43,7 @@
 class detector {
     static detector* instance;
     int data;
+    
 
     // Private constructor so that no objects can be created.
     detector() {
@@ -50,7 +51,7 @@ class detector {
     }
 
 public:
-
+    std::vector<std::string> classes;
     static detector* getInstance() {
         if (!instance)
             instance = new detector;
@@ -74,9 +75,11 @@ public:
         std::string yoloBasePath = "C:/Users/ahmet/source/repos/a2interview/a2interview/model/";
         std::string yoloClassesFile = yoloBasePath + "coco.names";
         std::string yoloModelConfiguration = yoloBasePath + "yolov3.cfg";
-        std::string yoloModelWeights = yoloBasePath + "yolov3.weights";
+        std::string yoloModelWeights = yoloBasePath + "yolov31.weights";
 
         YoloNeuralNetwork yoloNeuralNetwork(std::move(yoloClassesFile), std::move(yoloModelConfiguration), std::move(yoloModelWeights));
+        classes = yoloNeuralNetwork.getClassesNames();
+
         return yoloNeuralNetwork;
     }
 
