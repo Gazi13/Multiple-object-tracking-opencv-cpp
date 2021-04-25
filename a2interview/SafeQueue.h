@@ -76,6 +76,13 @@ public:
         else
             return false;
     }
+    bool slow_down() {
+        if (m_max_num_items - m_queue.size() < 100)
+            return true;
+        else
+            return false;
+    
+    }
     bool push(const value_type& item)
     {
         std::lock_guard<std::mutex> lock(m_mutex);

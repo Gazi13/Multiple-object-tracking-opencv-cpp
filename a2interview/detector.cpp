@@ -87,7 +87,7 @@ void detector::readAndDetect(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<cv:
         sq.timeout_front(frame, 10); // timeout_front
         detector::detectObjects(yoloNeuralNetwork, frame, sq2);
         //cv::imshow("detect", frame);
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
     }
 
