@@ -32,5 +32,11 @@ public:
         this->data = data;
     }
 
-    void readAndSend(SafeQueue<cv::Mat>& sq, std::string vFileName);
+    /**
+     *  Verilen path üzerinden video framelerini okuyuo queue pushlar 
+     * \param[in] sq : framelerin saklandigi threadsafe queue
+     * \param[in] video_path : okunacak videonun konumu      
+     * \return ...
+     */
+    void readAndSend(SafeQueue<cv::Mat>& sq, std::string video_path);
 };

@@ -40,18 +40,23 @@ void track(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<YoloNeuralNetwork::Bo
 
 
 int main()
-{
+{   
+    // sq framelerin tutuldugu threadsafe queue
     SafeQueue <cv::Mat> sq;
+    // sq2 bounding boxlarin tutuldugu threadsafe queue
     SafeQueue <std::vector<YoloNeuralNetwork::BoundingBox>> sq2;
     
     // Parameters
-    std::string vFileName = "C:/Users/ahmet/Desktop/Video-a2.mp4";
+    // model link https://pjreddie.com/media/files/yolov3.weights
+
+    std::string vFileName = "C:/Users/ahmet/Desktop/va2.mp4";
     std::string yolo_base_path = "C:/Users/ahmet/source/repos/a2interview/a2interview/model/";
     std::string yolo_class_name = yolo_base_path + "coco.names";
     std::string yolo_cfg = yolo_base_path + "yolov3.cfg";
-    std::string yolo_weights = yolo_base_path + "yolov31.weights";
+    std::string yolo_weights = yolo_base_path + "yolov3.weights";
     std::vector<std::string> configures{ yolo_class_name ,yolo_cfg,yolo_weights};
 
+    // Thread olustur.
     std::thread th1(read, ref(sq), vFileName);     
     std::thread th2(detect, ref(sq), ref(sq2), configures);
     std::thread th3(track, ref(sq), ref(sq2));

@@ -36,6 +36,14 @@ public:
         this->data = data;
     }
 
+    /**
+     *  sq ve sq2'den frame ve varsa bounding boxlari okur.
+     *  Bu bounding boxlari trackera aktarir ve günceller.
+     *  Boxlari, label ve id bilgilerini ekrana cizer.
+     * \param[in] sq : framelerin okundugu threadsafe queue
+     * \param[in] sq2 : tespit edilen bounding boxlarin okundugu queue
+     * \return ...
+     */
     void readAndTrack(SafeQueue <cv::Mat>& sq, SafeQueue <std::vector<YoloNeuralNetwork::BoundingBox>>& sq2);
 
 

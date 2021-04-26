@@ -29,7 +29,6 @@ void detector::detectObjects(YoloNeuralNetwork& yoloNeuralNetwork, cv::Mat& fram
     float confThreshold = 0.20;
     float nmsThreshold = 0.40;
     std::vector<YoloNeuralNetwork::BoundingBox> filtered_boxes;
-
     std::vector<YoloNeuralNetwork::BoundingBox> bBoxes = yoloNeuralNetwork.getBoundingBoxes(frame, confThreshold, nmsThreshold);
 
     for (auto it = bBoxes.begin(); it != bBoxes.end(); ++it) {
@@ -52,6 +51,4 @@ void detector::detectObjects(YoloNeuralNetwork& yoloNeuralNetwork, cv::Mat& fram
 
     // Tespit edilen kutular trackerin kullanmasi icin sq2 aktarilir.
     sq2.push(filtered_boxes);
-    //frame = yoloNeuralNetwork.drawBoundingBoxes(frame, filtered_boxes);
-
 }
