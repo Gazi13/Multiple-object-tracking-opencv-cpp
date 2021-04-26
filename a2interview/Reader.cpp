@@ -3,10 +3,9 @@
 
 Reader* Reader::instance = 0;
 
-void Reader::readAndSend(SafeQueue<cv::Mat>& sq) {
+void Reader::readAndSend(SafeQueue<cv::Mat>& sq, std::string vFileName) {
 
-    std::cout << "Video Player " << std::endl;
-    std::string vFileName = "C:/Users/ahmet/Desktop/Video-a2.mp4";
+    std::cout << " Read Frames " << std::endl;
     std::string wName = "Video Player";
     cv::VideoCapture vCap;
     vCap.open(vFileName);
@@ -21,12 +20,11 @@ void Reader::readAndSend(SafeQueue<cv::Mat>& sq) {
             // alternatif vCap >> frame2;
             sq.push(frame.clone());
 
+            // Eger queue dolmus ise okuma islemini yavaslat 
             if (sq.slow_down())
-                std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
         vCap.release();
-
     }
     else
     {

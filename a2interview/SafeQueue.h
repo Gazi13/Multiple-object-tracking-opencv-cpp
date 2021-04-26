@@ -1,20 +1,3 @@
-
-#ifdef _DEBUG               
-#pragma comment(lib, "opencv_core430d.lib")       
-#pragma comment(lib, "opencv_highgui430d.lib")    
-#pragma comment(lib, "opencv_imgcodecs430d.lib")  
-#pragma comment(lib, "opencv_videoio430d.lib")  
-#pragma comment(lib, "opencv_imgproc430d.lib")  
-
-#else       
-#pragma comment(lib, "opencv_core430.lib")       
-#pragma comment(lib, "opencv_highgui430.lib")    
-#pragma comment(lib, "opencv_imgcodecs430.lib")  
-#pragma comment(lib, "opencv_videoio430.lib")  
-#pragma comment(lib, "opencv_imgproc430.lib")  
-#endif  
-
-
 #ifndef SAFEQUEUE_H_
 #define SAFEQUEUE_H_
 
@@ -24,8 +7,6 @@
 #include <thread>
 #include <cstdint>
 #include <condition_variable>
-
-
 
 /** A thread-safe asynchronous queue */
 template <class T, class Container = std::list<T>>
@@ -77,7 +58,7 @@ public:
             return false;
     }
     bool slow_down() {
-        if (m_max_num_items - m_queue.size() < 100)
+        if (m_max_num_items - m_queue.size() < 500)
             return true;
         else
             return false;
@@ -331,7 +312,7 @@ private:
     std::queue<T, Container> m_queue;
     mutable std::mutex m_mutex;
     std::condition_variable m_condition;
-    unsigned int m_max_num_items = 1000;
+    unsigned int m_max_num_items = 2000;
 };
 
 /*! Swaps the contents of two SafeQueue objects. */

@@ -1,27 +1,9 @@
 #pragma once
-
-#ifdef _DEBUG               
-#pragma comment(lib, "opencv_core430d.lib")       
-#pragma comment(lib, "opencv_highgui430d.lib")    
-#pragma comment(lib, "opencv_imgcodecs430d.lib")  
-#pragma comment(lib, "opencv_videoio430d.lib")  
-#pragma comment(lib, "opencv_imgproc430d.lib")  
-
-#else       
-#pragma comment(lib, "opencv_core430.lib")       
-#pragma comment(lib, "opencv_highgui430.lib")    
-#pragma comment(lib, "opencv_imgcodecs430.lib")  
-#pragma comment(lib, "opencv_videoio430.lib")  
-#pragma comment(lib, "opencv_imgproc430.lib")  
-#endif  
-
-
 #include <iostream>
 #include <cstdio>
 #include <mutex>
 
 #include "SafeQueue.h"
-
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
@@ -50,5 +32,5 @@ public:
         this->data = data;
     }
 
-    void readAndSend(SafeQueue<cv::Mat>& sq);
+    void readAndSend(SafeQueue<cv::Mat>& sq, std::string vFileName);
 };
