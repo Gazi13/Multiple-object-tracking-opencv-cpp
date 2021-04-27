@@ -3,3 +3,7 @@ Object Detection and Tracking with Opencv &amp; YOLO
 
 Weights link
 https://pjreddie.com/media/files/yolov3.weights
+
+
+## Referances
+https://github.com/ahmedmbakr/CppND-Capstone
