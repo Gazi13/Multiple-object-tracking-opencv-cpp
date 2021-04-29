@@ -10,7 +10,9 @@
 Object Detection and Tracking with Opencv &amp; YOLO
 
 # Architect 
-![alt text][architect.png]
+
+[image1]: ./architect.png "Architect"
+![alt text][image1]
 
 Weights link
 https://pjreddie.com/media/files/yolov3.weights
